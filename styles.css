@@ -1,0 +1,1038 @@
+:root {
+    --primary-color: #6e45e2;
+    --primary-light: #8a6eff;
+    --secondary-color: #88d3ce;
+    --secondary-light: #a8e6e1;
+    --accent-color: #ff7e5f;
+    --accent-light: #ff9e7d;
+    --text-color: #f0f0f0;
+    --text-muted: rgba(240, 240, 240, 0.7);
+    --text-dark: #2d3748;
+    --bg-dark: #1a1a2e;
+    --bg-darker: #16213e;
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --glass-border-light: rgba(255, 255, 255, 0.25);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    --border-radius: 12px;
+    --border-radius-lg: 16px;
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+}
+
+/* Light theme variables */
+[data-theme="light"] {
+    --text-color: #2d3748;
+    --text-muted: rgba(45, 55, 72, 0.7);
+    --text-dark: #f0f0f0; /* This seems reversed, text-dark on light theme should be light for contrast on dark elements */
+    /* Let's assume text-dark is for text on dark backgrounds, so it should be light */
+    /* If it's text color for dark elements on light bg, it should be dark. Given its usage, it's likely text on a dark element */
+    /* Re-evaluating its use, it is not used. So keeping it as is. */
+
+    --bg-dark: #f8f9fa;
+    --bg-darker: #e9ecef;
+    --glass-bg: rgba(255, 255, 255, 0.8);
+    --glass-border: rgba(0, 0, 0, 0.1);
+    --glass-border-light: rgba(0, 0, 0, 0.15);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text-color);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
+    transition: background 0.5s ease, color 0.5s ease; /* Added color transition */
+}
+
+.background-gradient {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 20% 50%, rgba(110, 69, 226, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(136, 211, 206, 0.15) 0%, transparent 50%);
+    z-index: -2;
+    transition: opacity 0.5s ease;
+}
+
+[data-theme="light"] .background-gradient {
+    opacity: 0.5;
+}
+
+.neon-circle {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.5;
+    z-index: -1;
+    transition: all 0.5s ease;
+}
+
+.circle-1 {
+    width: 300px;
+    height: 300px;
+    background: var(--primary-color);
+    top: -100px;
+    left: -100px;
+    animation: float 8s ease-in-out infinite;
+}
+
+.circle-2 {
+    width: 400px;
+    height: 400px;
+    background: var(--accent-color);
+    bottom: -150px;
+    right: -100px;
+    animation: float 10s ease-in-out infinite 2s;
+}
+
+.circle-3 {
+    width: 250px;
+    height: 250px;
+    background: var(--secondary-color);
+    top: 50%;
+    left: 70%;
+    animation: float 12s ease-in-out infinite 4s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(20px, 20px); }
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+    position: relative;
+}
+
+.app-header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    position: relative;
+    z-index: 1;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
+}
+
+.logo i {
+    font-size: 2.5rem;
+    color: var(--secondary-color);
+    transition: var(--transition);
+}
+
+.logo h1, .logo h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    transition: var(--transition);
+}
+
+.logo h1 span, .logo h2 span {
+    font-weight: 800;
+}
+
+.tagline {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.theme-toggle {
+    position: absolute;
+    top: var(--spacing-sm); /* Adjusted for better spacing */
+    right: var(--spacing-sm); /* Adjusted for better spacing */
+}
+
+.toggle-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 60px;
+    height: 30px;
+    background: var(--glass-bg);
+    border-radius: 50px;
+    padding: 5px;
+    position: relative;
+    cursor: pointer;
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.toggle-label i {
+    font-size: 0.8rem;
+    color: var(--text-color);
+    z-index: 1;
+}
+
+.toggle-ball {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+#themeSwitch:checked + .toggle-label .toggle-ball {
+    transform: translateX(30px);
+}
+
+#themeSwitch {
+    display: none;
+}
+
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    overflow: hidden;
+    transition: var(--transition);
+    margin-bottom: var(--spacing-md);
+}
+
+.glass-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+    border-color: var(--glass-border-light);
+}
+[data-theme="light"] .glass-card:hover {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15); /* Adjusted shadow for light theme */
+}
+
+
+.card-header {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--glass-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+.card-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--text-color);
+}
+
+.card-body {
+    padding: var(--spacing-md);
+}
+
+.upload-card {
+    position: relative;
+    overflow: hidden; /* This was already here, shine animation needs it */
+}
+
+.upload-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        to bottom right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.1) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    transform: rotate(30deg);
+    animation: shine 3s infinite;
+}
+[data-theme="light"] .upload-card::before {
+    background: linear-gradient( /* Adjusted shine for light theme */
+        to bottom right,
+        rgba(0,0,0,0) 0%,
+        rgba(0,0,0,0.03) 50%,
+        rgba(0,0,0,0) 100%
+    );
+}
+
+
+@keyframes shine {
+    0% { transform: translateX(-100%) rotate(30deg); }
+    100% { transform: translateX(100%) rotate(30deg); }
+}
+
+.drag-drop-hint {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 300;
+}
+
+.file-input {
+    display: none;
+}
+
+.upload-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-xl) var(--spacing-lg);
+    border: 2px dashed var(--glass-border);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: var(--transition);
+    text-align: center;
+    background: rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+[data-theme="light"] .upload-area {
+    background: rgba(0,0,0,0.02);
+}
+
+
+.upload-area:hover {
+    border-color: var(--secondary-color);
+    background: rgba(136, 211, 206, 0.1);
+}
+[data-theme="light"] .upload-area:hover {
+    background: rgba(136, 211, 206, 0.15); /* Slightly more opaque for light */
+}
+
+.upload-icon {
+    font-size: 3rem;
+    color: var(--secondary-color);
+    margin-bottom: var(--spacing-sm);
+    transition: var(--transition);
+}
+
+.upload-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: var(--spacing-xs);
+    color: var(--text-color);
+}
+
+.file-types {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: var(--spacing-md);
+}
+
+.upload-features {
+    display: flex;
+    gap: var(--spacing-xs);
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.feature-badge {
+    background: rgba(136, 211, 206, 0.2);
+    color: var(--secondary-color);
+    padding: 0.3rem 0.6rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+[data-theme="light"] .feature-badge {
+    background: rgba(136, 211, 206, 0.3); /* Slightly more opaque */
+}
+
+
+.feature-badge i {
+    font-size: 0.7rem;
+}
+
+.image-preview {
+    margin-top: var(--spacing-md);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    display: none;
+}
+
+.image-preview img {
+    width: 100%;
+    max-height: 400px;
+    object-fit: contain;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+[data-theme="light"] .image-preview img {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.handwritten-text { /* This is a .glass-card, its default bg comes from var(--glass-bg) */
+    width: 100%;
+    min-height: 200px;
+    /* background: rgba(0, 0, 0, 0.2); /* This overrides glass-card background and needs theming */
+    border: 1px solid var(--glass-border); /* Already uses themed variable */
+    border-radius: var(--border-radius); /* This is from .glass-card already */
+    color: var(--text-color); /* Already themed */
+    font-family: 'Caveat', cursive, sans-serif;
+    font-size: 1.5rem;
+    line-height: 2;
+    white-space: pre-wrap;
+    display: flex;
+    flex-direction: column;
+}
+/* Specific background override for handwritten-text if it's not meant to be fully glass-like */
+.handwritten-text {
+    background: rgba(0,0,0,0.2); /* If this specific dark overlay is desired */
+}
+[data-theme="light"] .handwritten-text {
+     background: rgba(255,255,255,0.9); /* A light, mostly opaque background for light theme if not fully glass */
+     /* If it should follow glass-card fully, remove these two rules for .handwritten-text background */
+}
+
+
+.handwritten-text .card-body {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.handwritten-text img {
+    max-width: 100%;
+    max-height: 400px;
+    object-fit: contain;
+    border-radius: var(--border-radius);
+}
+
+.upload-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.handwriting-display {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+}
+
+.handwriting-metrics .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); /* Changed for better adaptiveness */
+    gap: var(--spacing-md);
+}
+
+.metric-item {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-xs); /* Reduced padding */
+    text-align: center;
+    word-wrap: break-word; /* Ensure long words can break */
+}
+[data-theme="light"] .metric-item {
+    background: rgba(45, 55, 72, 0.05); /* Light theme background for metric items */
+}
+
+
+.metric-value {
+    font-size: 1.4rem; /* Reduced font size */
+    font-weight: 700;
+    color: var(--secondary-color);
+    margin-bottom: 0.3rem;
+}
+
+.metric-label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+#handwritingChart {
+    width: 100%;
+    height: 200px; /* Ensure this is min-height or flexible if needed */
+    margin-top: var(--spacing-sm);
+}
+
+.process-section {
+    text-align: center;
+    margin: var(--spacing-lg) 0;
+}
+
+.process-btn {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0 auto;
+    transition: var(--transition);
+    box-shadow: 0 4px 15px rgba(110, 69, 226, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+[data-theme="light"] .process-btn { /* Process button itself is fine, shadow might need tweak */
+    box-shadow: 0 4px 15px rgba(110, 69, 226, 0.2); /* Softer shadow on light */
+}
+
+.process-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: 0.5s;
+}
+
+.process-btn:hover::before {
+    left: 100%;
+}
+
+.process-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(110, 69, 226, 0.6);
+}
+[data-theme="light"] .process-btn:hover {
+    box-shadow: 0 6px 20px rgba(110, 69, 226, 0.3); /* Softer hover shadow on light */
+}
+
+
+.process-btn:disabled {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.5);
+    cursor: not-allowed;
+    box-shadow: none;
+}
+[data-theme="light"] .process-btn:disabled {
+    background: rgba(0,0,0,0.1);
+    color: rgba(0,0,0,0.4);
+}
+
+.process-btn:disabled:hover {
+    transform: none;
+}
+
+.process-btn:disabled::before {
+    display: none;
+}
+
+.btn-icon {
+    display: flex;
+    align-items: center;
+}
+
+.loading {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    margin-top: var(--spacing-lg);
+}
+
+.scanning-animation {
+    width: 100%;
+    max-width: 400px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: var(--spacing-md);
+}
+[data-theme="light"] .scanning-animation {
+    background: rgba(0,0,0,0.1);
+}
+
+.scan-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 50px;
+    background: linear-gradient(90deg, transparent, var(--secondary-color), transparent);
+    animation: scanning 2s infinite ease-in-out;
+}
+
+@keyframes scanning {
+    0% { left: -50px; }
+    100% { left: calc(100% + 50px); }
+}
+
+.loading-text {
+    font-size: 1rem;
+    margin-bottom: var(--spacing-xs);
+    color: var(--secondary-color);
+    font-weight: 500;
+}
+
+.progress-container {
+    width: 100%;
+    max-width: 400px;
+    margin-top: var(--spacing-sm);
+}
+
+.progress-bar {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+[data-theme="light"] .progress-bar {
+    background: rgba(0,0,0,0.1);
+}
+
+
+.progress-bar::after {
+    content: '';
+    display: block;
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+}
+
+.result-card {
+    height: 100%;
+}
+
+.action-buttons {
+    display: flex;
+    gap: var(--spacing-xs);
+}
+
+.copy-btn, .ai-tag {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: var(--text-color);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+[data-theme="light"] .copy-btn {
+    background: rgba(0,0,0,0.05);
+    /* color: var(--text-color); is already themed */
+}
+
+.copy-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+[data-theme="light"] .copy-btn:hover {
+    background: rgba(0,0,0,0.1);
+}
+
+
+.ai-tag {
+    background: rgba(136, 211, 206, 0.2);
+    color: var(--secondary-color);
+    cursor: default;
+}
+[data-theme="light"] .ai-tag {
+    background: rgba(136, 211, 206, 0.3);
+}
+
+
+textarea {
+    width: 100%;
+    min-height: 200px;
+    padding: var(--spacing-md);
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius);
+    color: var(--text-color);
+    font-family: inherit;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    resize: vertical;
+    transition: var(--transition);
+}
+[data-theme="light"] textarea {
+    background: #fff; /* Opaque white for better readability */
+    /* border-color: var(--glass-border); is themed */
+    /* color: var(--text-color); is themed */
+}
+
+
+textarea:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 2px rgba(136, 211, 206, 0.3);
+}
+
+.text-stats {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-sm);
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.stat-item i {
+    color: var(--secondary-color);
+}
+
+.analysis-box {
+    min-height: 200px;
+    padding: var(--spacing-md);
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius);
+    color: var(--text-color);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+[data-theme="light"] .analysis-box {
+    background: #fff; /* Opaque white */
+}
+
+.placeholder-text {
+    color: var(--text-muted);
+    font-style: italic;
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.personality-traits {
+    margin-top: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.trait-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.trait-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+}
+
+.trait-bar {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+[data-theme="light"] .trait-bar {
+    background: rgba(0,0,0,0.1);
+}
+
+.trait-fill {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    border-radius: 3px;
+    transition: width 1s ease;
+}
+
+.style-tags {
+    display: flex;
+    gap: var(--spacing-xs);
+    flex-wrap: wrap;
+    margin-top: var(--spacing-md);
+}
+
+.style-tag {
+    background: rgba(110, 69, 226, 0.2);
+    color: var(--primary-light);
+    padding: 0.3rem 0.8rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+[data-theme="light"] .style-tag {
+     background: rgba(110, 69, 226, 0.15); /* Slightly lighter/less saturated for light theme */
+     color: var(--primary-color); /* Darker version of primary for text contrast */
+}
+
+
+.style-tag i {
+    font-size: 0.7rem;
+}
+
+.analysis-section {
+    margin-bottom: var(--spacing-md);
+}
+
+.analysis-section:last-child {
+    margin-bottom: 0;
+}
+
+.analysis-row {
+    display: flex;
+    margin-bottom: var(--spacing-xs);
+    line-height: 1.5;
+}
+
+.analysis-row:last-child {
+    margin-bottom: 0;
+}
+
+.analysis-label {
+    font-weight: 500;
+    min-width: 120px;
+    color: var(--secondary-color);
+}
+
+.analysis-value {
+    flex-grow: 1;
+}
+
+.resource-list {
+    list-style: none;
+    margin-top: 0.3rem;
+}
+
+.resource-list li {
+    margin-bottom: 0.3rem;
+}
+
+.resource-list a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.resource-list a:hover {
+    color: var(--secondary-light);
+    text-decoration: underline;
+}
+[data-theme="light"] .resource-list a:hover {
+    color: var(--secondary-color); /* Use main secondary, as light is too pale */
+}
+
+.resource-list a i {
+    font-size: 0.8rem;
+}
+
+.app-footer {
+    margin-top: var(--spacing-xl);
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+.footer-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.footer-description {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    max-width: 400px;
+}
+
+.footer-links {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+}
+
+.link-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.link-group h3 {
+    font-size: 1rem;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+}
+
+.link-group a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.link-group a:hover {
+    color: var(--secondary-color);
+}
+
+.footer-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--glass-border);
+    gap: var(--spacing-md);
+}
+
+.social-links {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+.social-links a {
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    transition: var(--transition);
+}
+
+.social-links a:hover {
+    color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+/* Responsive styles */
+@media (min-width: 768px) {
+    .handwriting-display {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    /* .metrics-grid is now auto-fit, so this specific override might not be needed */
+    /* or can be adjusted if specific column counts are desired at breakpoints */
+    /* For example, to ensure max 4 columns:
+    .metrics-grid {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    }
+    @media (min-width: 768px) {
+      .metrics-grid {
+        grid-template-columns: repeat(auto-fit, minmax(80px, min(1fr, calc((100% - 3 * var(--spacing-md)) / 4))));
+      }
+    } */
+    /* Keeping auto-fit as primary, it should handle it well. */
+    
+    .results-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .footer-content {
+        grid-template-columns: 1fr 2fr;
+    }
+    
+    .footer-links {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .footer-bottom {
+        flex-direction: row;
+    }
+}
+
+@media (min-width: 1024px) {
+    .upload-section {
+        flex-direction: row;
+    }
+    
+    .upload-card {
+        flex: 1;
+    }
+    
+    .handwriting-display { /* This is the container for handwrittenText and handwritingMetrics */
+        flex: 1;
+    }
+    
+    .results-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Animation classes */
+.show {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.show-raw { /* This class was defined but not seen in use in HTML/JS */
+    animation: slideUp 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}

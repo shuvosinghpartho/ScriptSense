@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScriptSense | AI Handwriting Recognition & Analysis</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="background-gradient"></div>
+    <div class="neon-circle circle-1"></div>
+    <div class="neon-circle circle-2"></div>
+    <div class="neon-circle circle-3"></div>
+    
+    <div class="container">
+        <header class="app-header">
+            <div class="logo">
+                <i class="fas fa-robot"></i>
+                <h1>Script<span>Sense</span></h1>
+            </div>
+            <p class="tagline">Advanced AI handwriting recognition & personality analysis</p>
+            <div class="theme-toggle">
+                <input type="checkbox" id="themeSwitch">
+                <label for="themeSwitch" class="toggle-label">
+                    <i class="fas fa-sun"></i>
+                    <i class="fas fa-moon"></i>
+                    <span class="toggle-ball"></span>
+                </label>
+            </div>
+        </header>
+        
+        <main class="app-content">
+            <div class="upload-section">
+                <div class="upload-card glass-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-cloud-upload-alt"></i> Upload Handwriting Sample</h2>
+                        <div class="drag-drop-hint">Drag & drop or click to browse</div>
+                    </div>
+                    <div class="card-body">
+                        <input type="file" id="imageUpload" accept="image/*" class="file-input">
+                        <label for="imageUpload" class="upload-area">
+                            <div class="upload-icon">
+                                <i class="fas fa-file-image"></i>
+                            </div>
+                            <div class="upload-text">Select an image file</div>
+                            <div class="file-types">JPG, PNG, or WEBP</div>
+                            <div class="upload-features">
+                                <div class="feature-badge"><i class="fas fa-check-circle"></i> OCR</div>
+                                <div class="feature-badge"><i class="fas fa-check-circle"></i> Personality Analysis</div>
+                                <div class="feature-badge"><i class="fas fa-check-circle"></i> Style Detection</div>
+                            </div>
+                        </label>
+                        <div id="imagePreview" class="image-preview"></div>
+                    </div>
+                </div>
+                
+                <div class="handwriting-display">
+                    <div id="handwrittenText" class="handwritten-text glass-card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-pen-fancy"></i> Original Handwriting</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="placeholder-text">Your handwriting will appear here</div>
+                        </div>
+                    </div>
+                    
+                    <div class="handwriting-metrics glass-card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-chart-line"></i> Handwriting Metrics</h2>
+                            <div class="ai-tag">AI Generated</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="metrics-grid">
+                                <div class="metric-item">
+                                    <div class="metric-value" id="legibilityScore">--</div>
+                                    <div class="metric-label">Legibility</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-value" id="slantScore">--</div>
+                                    <div class="metric-label">Slant</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-value" id="pressureScore">--</div>
+                                    <div class="metric-label">Pressure</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-value" id="spacingScore">--</div>
+                                    <div class="metric-label">Spacing</div>
+                                </div>
+                            </div>
+                            <canvas id="handwritingChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="process-section">
+                <button id="processBtn" class="process-btn" disabled>
+                    <span class="btn-text">Analyze Handwriting</span>
+                    <span class="btn-icon"><i class="fas fa-magic"></i></span>
+                </button>
+                <div class="loading" id="loadingIndicator" style="display: none;">
+                    <div class="scanning-animation">
+                        <div class="scan-line"></div>
+                    </div>
+                    <div class="loading-text">AI is analyzing your handwriting...</div>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="progressBar"></div> <!-- Ensure ID matches JS if changed -->
+                        <div class="progress-text" id="progressText">Initializing...</div> <!-- Ensure ID matches JS if changed -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="results-grid">
+                <div class="result-card glass-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-align-left"></i> Recognized Text</h2>
+                        <div class="action-buttons">
+                            <button class="copy-btn" id="copyTextBtn"><i class="far fa-copy"></i> Copy</button>
+                            <button class="copy-btn" id="downloadTextBtn"><i class="fas fa-download"></i> Download</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <textarea id="recognizedText" readonly placeholder="Recognized text will appear here..."></textarea>
+                        <div class="text-stats">
+                            <div class="stat-item"><i class="fas fa-font"></i> <span id="wordCount">0</span> words</div>
+                            <div class="stat-item"><i class="fas fa-clock"></i> <span id="readTime">0</span> min read</div>
+                            <div class="stat-item"><i class="fas fa-key"></i> Key phrases: <span id="keyPhrases">--</span></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="result-card glass-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-brain"></i> Personality Insights</h2>
+                        <div class="ai-tag">AI Generated</div>
+                    </div>
+                    <div class="card-body">
+                        <div id="personalityAnalysis" class="analysis-box">
+                            <div class="placeholder-text">Personality analysis will appear here after processing</div>
+                        </div>
+                        <div class="personality-traits">
+                            <div class="trait-item">
+                                <div class="trait-label"><span>Openness</span><span class="trait-percentage"></span></div>
+                                <div class="trait-bar"><div class="trait-fill" id="opennessBar"></div></div>
+                            </div>
+                            <div class="trait-item">
+                                <div class="trait-label"><span>Conscientiousness</span><span class="trait-percentage"></span></div>
+                                <div class="trait-bar"><div class="trait-fill" id="conscientiousnessBar"></div></div>
+                            </div>
+                            <div class="trait-item">
+                                <div class="trait-label"><span>Extraversion</span><span class="trait-percentage"></span></div>
+                                <div class="trait-bar"><div class="trait-fill" id="extraversionBar"></div></div>
+                            </div>
+                            <div class="trait-item">
+                                <div class="trait-label"><span>Agreeableness</span><span class="trait-percentage"></span></div>
+                                <div class="trait-bar"><div class="trait-fill" id="agreeablenessBar"></div></div>
+                            </div>
+                            <div class="trait-item">
+                                <div class="trait-label"><span>Neuroticism</span><span class="trait-percentage"></span></div>
+                                <div class="trait-bar"><div class="trait-fill" id="neuroticismBar"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="result-card glass-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-file-contract"></i> Summary</h2>
+                        <div class="ai-tag">AI Generated</div>
+                    </div>
+                    <div class="card-body">
+                        <div id="summary" class="analysis-box">
+                            <div class="placeholder-text">Summary will appear here after processing</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="result-card glass-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-lightbulb"></i> Writing Style Analysis</h2>
+                        <div class="ai-tag">AI Generated</div>
+                    </div>
+                    <div class="card-body">
+                        <div id="writingStyle" class="analysis-box">
+                            <div class="placeholder-text">Writing style analysis will appear here after processing</div>
+                        </div>
+                        <div class="style-tags" id="styleTags"></div>
+                    </div>
+                </div>
+                
+                <div class="result-card glass-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-book"></i> Recommended Resources</h2>
+                        <div class="ai-tag">AI Generated</div>
+                    </div>
+                    <div class="card-body">
+                        <div id="resources" class="analysis-box">
+                            <div class="placeholder-text">Recommended learning resources will appear here</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="result-card glass-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-history"></i> Analysis History</h2>
+                    </div>
+                    <div class="card-body">
+                        <div id="history" class="analysis-box">
+                            <div class="placeholder-text">Your previous analyses will appear here (feature coming soon)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="app-footer">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <div class="logo">
+                        <i class="fas fa-robot"></i>
+                        <h2>Script<span>Sense</span></h2>
+                    </div>
+                    <p class="footer-description">Advanced AI handwriting analysis for education, business, and personal insights.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="link-group">
+                        <h3>Features</h3>
+                        <a href="#">Handwriting OCR</a>
+                        <a href="#">Personality Analysis</a>
+                        <a href="#">Writing Style</a>
+                        <a href="#">Learning Resources</a>
+                    </div>
+                    <div class="link-group">
+                        <h3>Company</h3>
+                        <a href="#">About Us</a>
+                        <a href="#">Blog</a>
+                        <a href="#">Careers</a>
+                        <a href="#">Contact</a>
+                    </div>
+                    <div class="link-group">
+                        <h3>Legal</h3>
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of Service</a>
+                        <a href="#">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2025 ScriptSense AI | All rights reserved</p>
+                <div class="social-links">
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

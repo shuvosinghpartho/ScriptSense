@@ -941,12 +941,14 @@ textarea:focus {
 .footer-bottom {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
+    align-items: center; /* Centers the items horizontally */
+    justify-content: center; /* Centers the items vertically */
+    text-align: center; /* Ensures text is centered within each item */
     padding-top: var(--spacing-md);
     border-top: 1px solid var(--glass-border);
     gap: var(--spacing-md);
 }
+
 
 .social-links {
     display: flex;
